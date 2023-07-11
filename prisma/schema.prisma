@@ -1,0 +1,173 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  Id            String          @id @default(uuid())
+  firstName     String
+  lastName      String
+  email         String          @unique
+  password      String          @default("123")
+  phone         String
+  depertiment   String
+  option        String
+  institution   String
+  Status        AccountStatus   @default(inprogress)
+  key           String
+  post          post[]
+  comments      comments[]
+  likes         likes[]
+  profilepcs    profilepcs[]
+  groups        groups[]
+  groupsMembers groupsMembers[]
+  sent          messages[]      @relation("reciverRelation")
+  receive       messages[]      @relation("senderrRelation")
+}
+
+model post {
+  id            Int         @id @default(autoincrement())
+  date          DateTime    @default(now())
+  content       String
+  status        String
+  type          String      @default("personal")
+  groups        groups      @relation(fields: [groupsId], references: [id])
+  likes         Int         @default(0)
+  comments      Int         @default(0)
+  updatedAt     DateTime    @default(now()) @updatedAt
+  users         users       @relation(fields: [userId], references: [Id])
+  userId        String
+  attachments   attachments @relation(fields: [attachmentsId], references: [id])
+  attachmentsId Int
+  groupsId      Int         @default(1)
+  allcomments   comments[]
+  alllikes      likes[]
+}
+
+model comments {
+  id            Int         @id @default(autoincrement())
+  date          DateTime    @default(now())
+  post          post        @relation(fields: [postId], references: [id])
+  content       String
+  attachments   attachments @relation(fields: [attachmentsId], references: [id])
+  users         users       @relation(fields: [userId], references: [Id])
+  userId        String
+  status        String
+  attachmentsId Int
+  postId        Int
+}
+
+model messages {
+  id            Int         @id @default(autoincrement())
+  date          DateTime    @default(now())
+  content       String
+  Status        String
+  reciver       users       @relation(name: "reciverRelation", fields: [receiverId], references: [Id])
+  sent          users       @relation(name: "senderrRelation", fields: [senderId], references: [Id])
+  senderId      String
+  receiverId    String
+  attachements  attachments @relation(fields: [attachmentsId], references: [id])
+  attachmentsId Int
+}
+
+model attachments {
+  id          Int          @id @default(autoincrement())
+  url         String
+  dateCreated DateTime     @default(now())
+  status      String
+  messages    messages[]
+  profilepcs  profilepcs[]
+  comments    comments[]
+  post        post[]
+}
+
+model likes {
+  id        Int       @id @default(autoincrement())
+  likedItem String
+  type      likesType @default(post)
+  users     users     @relation(fields: [userId], references: [Id])
+  userId    String
+  post      post?     @relation(fields: [postId], references: [id])
+  postId    Int?
+}
+
+model groups {
+  id            Int             @id @default(autoincrement())
+  users         users           @relation(fields: [groupOunerID], references: [Id])
+  groupOunerID  String
+  name          String
+  Description   String
+  status        String
+  groupIcons    Int
+  groupsMembers groupsMembers[]
+  post          post[]
+}
+
+model profilepcs {
+  id            Int         @id @default(autoincrement())
+  status        String
+  users         users       @relation(fields: [userId], references: [Id])
+  userId        String
+  attachements  attachments @relation(fields: [attachmentsId], references: [id])
+  attachmentsId Int
+}
+
+model groupsMembers {
+  role     groupRoles @default(basic)
+  groups   groups     @relation(fields: [groupsId], references: [id])
+  user     users      @relation(fields: [usersId], references: [Id])
+  groupsId Int
+  usersId  String
+
+  @@id([groupsId, usersId])
+  @@unique([groupsId, usersId])
+}
+
+model search {
+  id        String   @id @default(uuid())
+  date      DateTime @default(now())
+  query     String
+  frequency Int
+}
+
+model report {
+  id               String     @id @default(uuid())
+  title            reportType @default(abuse)
+  frequency        Int
+  ReportedItemType String
+  reportedItemId   String
+}
+
+enum AccountStatus {
+  active
+  inprogress
+  online
+  locked
+}
+
+enum groupRoles {
+  admin
+  editor
+  basic
+}
+
+enum likesType {
+  post
+  comment
+  picture
+}
+
+enum reportType {
+  abuse
+  harassment
+  notlikes
+  content
+  spam
+}
