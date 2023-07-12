@@ -18,7 +18,7 @@ const search = require("./src/controllers/searchController");
 const app = express();
 app.use(express.json());
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "https://studyhubfree.netlify.app");
   res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type");
@@ -27,7 +27,10 @@ app.use(function (req, res, next) {
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 app.get("/", async (req, res, next) => {
-  res.send({ message: "Awesome it works 🐻" });
+  res.send({
+    message: "intare teck.com study hub project backend",
+    status: 200,
+  });
 });
 
 app.use("/api", require("./routes/api.route"));
