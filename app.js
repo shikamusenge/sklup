@@ -1,5 +1,5 @@
 const express = require("express");
-// const cros = require("cros");
+const cors = require("cors");
 const createError = require("http-errors");
 const morgan = require("morgan");
 require("dotenv").config();
@@ -24,6 +24,7 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Content-Type");
   next();
 });
+app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 app.get("/", async (req, res, next) => {
