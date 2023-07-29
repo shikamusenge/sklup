@@ -27,6 +27,12 @@ const signIn = async (req, res, next) => {
         Result.redirect = redirect;
         (Result.login = true), (Result.Message = "Login successfully");
         Result.user = { email: signingUser.email, phone: signingUser.phone };
+        const Client={
+          userId: signingUser.Id,
+          email: signingUser.email,
+          fname: signingUser.firstName,
+          lname: signingUser.lastName,
+        }
         let tkn = jwt.sign(
           {
             userId: signingUser.Id,
@@ -38,8 +44,9 @@ const signIn = async (req, res, next) => {
           process.env.PASS_KEY,
           { expiresIn: "12hrs" }
         );
+        Result.user=Client;
         Result.Token = tkn;
-        let Mess = `Skillup 
+        let Mess = `StudyHub
        Confrimation number: ${signingUser.key} 
         `;
         let phone = "+250787647168";

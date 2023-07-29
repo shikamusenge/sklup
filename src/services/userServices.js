@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient({ log: ["query"] });
+const prisma = new PrismaClient();
 const getUserinfo = require("./../authenthication/getUserinfo");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -48,7 +48,7 @@ const VeryfyEmail = async (req, res, next) => {
     if (existUser)
       res.status(200).json({
         signup: false,
-        Msg: `User with Email: ${req.body.email} aleady Exist`,
+        message: `User with Email: ${req.body.email} aleady Exist`,
         User: existUser,
       });
     else {
@@ -99,8 +99,18 @@ const createUser = async (req, res, next) => {
         // do something useful
       }
     });
-
-    res.status(200).json({ Msg: "signing in account....", User: newUser });
+ const Token = jwt.sign(
+  {
+    userId: newUser.Id,
+    email: newUser.email,
+    phone: newUser.phone,
+    Depertment: newUser.depertiment,
+    Option: newUser.option,
+  },
+  process.env.PASS_KEY,
+  { expiresIn: "12hrs" }
+);
+    res.status(200).json({ signup:true,message: "sacount created successfully",token:Token });
   } catch (err) {
     next(err);
   }
@@ -136,7 +146,7 @@ const restUserPassword = async (req, res, next) => {
       html:
         "<h1>Reset Password successfully</h1> <h3>Your New  Skillup password is</h3 <h2 style='color:darkblue'><strong> " +
         newPassword +
-        "</strong> </h2> </b> <br> <h2>thank you</h2> <a href='www.skillup.com/login' style='border-radius:3px; background-color:green; width:fit-content; padding:8px; color:black; text-decolation:none; font-size:xx-large'> LOGIN</a>",
+        "</strong> </h2> </b> <br> <h2>thank you</h2> <a href='https://studyhubfree.netlify.app' style='border-radius:3px; background-color:green; width:fit-content; padding:8px; color:black; text-decolation:none; font-size:xx-large'> LOGIN</a> <br><br><br> <h1>Chear Studyhub Team <3",
     };
     console.log(newPassword);
     transporter.sendMail(mailOptions, function (error, info) {
@@ -212,13 +222,15 @@ const verfyOtpcode = async (req, res, next) => {
           },
         });
         res.status(201).json({
-          status: true,
+          status:200,
+          verfied: true,
           message: "OTP-Code correct welcome Home",
         });
       } else {
-        res.status(500).json({
-          status: "500",
-          message: "invalid OTP Enter valid OTP-Code",
+        res.status(200).json({
+          verfied: false,
+          status:200,
+          message: `invalid OTP Enter valid OTP-Code sent on <b> ${userInfo.email}</b>`,
         });
       }
     }

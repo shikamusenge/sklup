@@ -20,8 +20,9 @@ model users {
   depertiment   String
   option        String
   institution   String
-  Status        AccountStatus   @default(inprogress)
+  level         String
   key           String
+  Status        AccountStatus   @default(inprogress)
   post          post[]
   comments      comments[]
   likes         likes[]
@@ -38,15 +39,16 @@ model post {
   content       String
   status        String
   type          String      @default("personal")
-  groups        groups      @relation(fields: [groupsId], references: [id])
+  userId        String
+  attachmentsId Int         @default(1)
+  groupsId      Int         @default(1)
   likes         Int         @default(0)
   comments      Int         @default(0)
+  reposts       Int         @default(0)
   updatedAt     DateTime    @default(now()) @updatedAt
   users         users       @relation(fields: [userId], references: [Id])
-  userId        String
+  groups        groups      @relation(fields: [groupsId], references: [id])
   attachments   attachments @relation(fields: [attachmentsId], references: [id])
-  attachmentsId Int
-  groupsId      Int         @default(1)
   allcomments   comments[]
   alllikes      likes[]
 }

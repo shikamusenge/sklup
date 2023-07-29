@@ -33,7 +33,7 @@ const getUserInfo = async (Token) => {
   const userInfo = await jwt.verify(Token, process.env.PASS_KEY);
   return userInfo;
 };
-// create account
+// create POST
 
 const createPost = async (req, res, next) => {
   try {
@@ -111,7 +111,6 @@ const editPost = async (req, res, next) => {
       status: status,
       updatedAt: now(),
     };
-    console.log(userInfo);
     const updatedPost = await prisma.post.update({
       data: Data,
       where: { id: Number(postId) },
