@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "post" ADD COLUMN     "reposts" INTEGER NOT NULL DEFAULT 0,
-ALTER COLUMN "attachmentsId" SET DEFAULT 1;

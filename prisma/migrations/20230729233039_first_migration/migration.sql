@@ -21,8 +21,9 @@ CREATE TABLE "users" (
     "depertiment" TEXT NOT NULL,
     "option" TEXT NOT NULL,
     "institution" TEXT NOT NULL,
-    "Status" "AccountStatus" NOT NULL DEFAULT 'inprogress',
+    "level" TEXT NOT NULL,
     "key" TEXT NOT NULL,
+    "Status" "AccountStatus" NOT NULL DEFAULT 'inprogress',
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("Id")
 );
@@ -34,12 +35,13 @@ CREATE TABLE "post" (
     "content" TEXT NOT NULL,
     "status" TEXT NOT NULL,
     "type" TEXT NOT NULL DEFAULT 'personal',
+    "userId" TEXT NOT NULL,
+    "attachmentsId" INTEGER NOT NULL DEFAULT 1,
+    "groupsId" INTEGER NOT NULL DEFAULT 1,
     "likes" INTEGER NOT NULL DEFAULT 0,
     "comments" INTEGER NOT NULL DEFAULT 0,
+    "reposts" INTEGER NOT NULL DEFAULT 0,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userId" TEXT NOT NULL,
-    "attachmentsId" INTEGER NOT NULL,
-    "groupsId" INTEGER NOT NULL DEFAULT 1,
 
     CONSTRAINT "post_pkey" PRIMARY KEY ("id")
 );
@@ -150,10 +152,10 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 CREATE UNIQUE INDEX "groupsMembers_groupsId_usersId_key" ON "groupsMembers"("groupsId", "usersId");
 
 -- AddForeignKey
-ALTER TABLE "post" ADD CONSTRAINT "post_groupsId_fkey" FOREIGN KEY ("groupsId") REFERENCES "groups"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "post" ADD CONSTRAINT "post_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("Id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "post" ADD CONSTRAINT "post_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("Id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "post" ADD CONSTRAINT "post_groupsId_fkey" FOREIGN KEY ("groupsId") REFERENCES "groups"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "post" ADD CONSTRAINT "post_attachmentsId_fkey" FOREIGN KEY ("attachmentsId") REFERENCES "attachments"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
