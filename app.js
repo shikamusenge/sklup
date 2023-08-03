@@ -15,6 +15,8 @@ const postsRoute = require("./src/controllers/postControllers");
 const login = require("./src/authenthication/auth");
 const verifyOtp = require("./src/services/userServices");
 const search = require("./src/controllers/searchController");
+const upload = require("./src/services/uploadservice");
+const attchmentRoute = require("./src/controllers/attachmentsController");
 const app = express();
 app.use(express.json());
 app.use(function (req, res, next) {
@@ -43,6 +45,8 @@ app.use("/v1/api/groups", groupsRoute);
 app.use("/v1/api/messages", messageRoute);
 app.use("/v1/api/comment", commentRoute);
 app.use("/v1/api/posts", postsRoute);
+app.use("/v1/api/upload", upload);
+app.use("/v1/api/savefile", attchmentRoute);
 app.use("/v1/api/verfyotp", verifyOtp.verfyOtpcode);
 
 app.use((req, res, next) => {

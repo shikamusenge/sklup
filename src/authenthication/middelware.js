@@ -7,8 +7,8 @@ const verfyToken = async (req, res, next) => {
     (err, decoded) => {
       if (err) {
         res
-          .status(500)
-          .json({ ok: false, message: "Your session hasbeen expierd Login" });
+          .status(200)
+          .json({ tokenExpired: true, message: "Your session hasbeen expierd Login" });
       } else {
         next();
       }
