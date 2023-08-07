@@ -13,8 +13,7 @@ const getAllUsers = (req, res, next) => {
 // create group
 const createGroup = async (req, res, next) => {
   try {
-    // res.status(200).json({ Msg: "Creating group api...." });
-    const { Token, name, Description, Status } = req.body;
+    const { Token, name, Description, groupStatus, icon} = req.body;
     const currentUser = await getUserInfo(Token);
     const userId = currentUser.userId;
     console.log(userId);
@@ -24,7 +23,7 @@ const createGroup = async (req, res, next) => {
         name: name,
         Description: Description,
         status: Status,
-        groupIcons: 1,
+        groupIcons: Number(icon),
       },
     });
     if (group) {

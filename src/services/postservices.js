@@ -15,7 +15,23 @@ const getPosts = async (req, res, next) => {
             depertiment: true,
           },
         },
-      },
+        attachments:{
+          select:{url:true}
+        },
+        allcomments:{
+          include:{
+            users:{
+              select:{
+                firstName:true,
+                lastName:true,
+                Id:true,
+              }
+            },
+            attachments:{
+              select:{url:true}
+            }
+          }
+        }}
     });
     const fileteredPost = AllPosts.filter(
       (post) => post.users.depertiment === userInfo.Depertment
