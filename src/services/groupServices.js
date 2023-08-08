@@ -22,7 +22,7 @@ const createGroup = async (req, res, next) => {
         groupOunerID: userId,
         name: name,
         Description: Description,
-        status: Status,
+        status: groupStatus,
         groupIcons: Number(icon),
       },
     });
