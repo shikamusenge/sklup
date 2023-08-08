@@ -20,7 +20,7 @@ const attchmentRoute = require("./src/controllers/attachmentsController");
 const app = express();
 app.use(express.json());
 const corsOptions = {
-  origin: 'https://studyhubfree.netlify.app',
+  origin: /^https:\/\/([\w-]+\.)?studyhubfree\.netlify\.app(\/.*)?$/,
 };
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
